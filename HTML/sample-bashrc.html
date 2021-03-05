@@ -1,0 +1,879 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>A Sample .bashrc File</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Advanced Bash-Scripting Guide"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="History Commands"
+HREF="histcommands.html"><LINK
+REL="NEXT"
+TITLE="Converting DOS Batch Files to Shell Scripts"
+HREF="dosbatch.html"><META
+HTTP-EQUIV="Content-Style-Type"
+CONTENT="text/css"><LINK
+REL="stylesheet"
+HREF="common/kde-common.css"
+TYPE="text/css"><META
+HTTP-EQUIV="Content-Type"
+CONTENT="text/html; charset=iso-8859-1"><META
+HTTP-EQUIV="Content-Language"
+CONTENT="en"><LINK
+REL="stylesheet"
+HREF="common/kde-localised.css"
+TYPE="text/css"
+TITLE="KDE-English"><LINK
+REL="stylesheet"
+HREF="common/kde-default.css"
+TYPE="text/css"
+TITLE="KDE-Default"></HEAD
+><BODY
+CLASS="APPENDIX"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#AA0000"
+VLINK="#AA0055"
+ALINK="#AA0000"
+STYLE="font-family: sans-serif;"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Advanced Bash-Scripting Guide: An in-depth exploration of the art of shell scripting</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="histcommands.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dosbatch.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="APPENDIX"
+><H1
+><A
+NAME="SAMPLE-BASHRC"
+></A
+>Appendix K. A Sample <TT
+CLASS="FILENAME"
+>.bashrc</TT
+> File</H1
+><P
+>The <TT
+CLASS="FILENAME"
+>~/.bashrc</TT
+> file determines the
+       behavior of interactive shells. A good look at this file can
+       lead to a better understanding of Bash.</P
+><P
+><A
+HREF="mailto:emmanuel.rouat@wanadoo.fr"
+TARGET="_top"
+>Emmanuel
+        Rouat</A
+> contributed the following very elaborate
+        <TT
+CLASS="FILENAME"
+>.bashrc</TT
+> file, written for a Linux system.
+        He welcomes reader feedback on it.</P
+><P
+>Study the file carefully, and feel free to reuse code
+        snippets and functions from it in your own
+        <TT
+CLASS="FILENAME"
+>.bashrc</TT
+> file or even in your scripts.</P
+><DIV
+CLASS="EXAMPLE"
+><HR><A
+NAME="BASHRC"
+></A
+><P
+><B
+>Example K-1. Sample <TT
+CLASS="FILENAME"
+>.bashrc</TT
+> file</B
+></P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>   1&nbsp;#===============================================================
+   2&nbsp;#
+   3&nbsp;# PERSONAL $HOME/.bashrc FILE for bash-2.05a (or later)
+   4&nbsp;#
+   5&nbsp;# Last modified: Tue Apr 15 20:32:34 CEST 2003
+   6&nbsp;#
+   7&nbsp;# This file is read (normally) by interactive shells only.
+   8&nbsp;# Here is the place to define your aliases, functions and
+   9&nbsp;# other interactive features like your prompt.
+  10&nbsp;#
+  11&nbsp;# This file was designed (originally) for Solaris but based 
+  12&nbsp;# on Redhat's default .bashrc file
+  13&nbsp;# --&#62; Modified for Linux.
+  14&nbsp;# The majority of the code you'll find here is based on code found
+  15&nbsp;# on Usenet (or internet).
+  16&nbsp;# This bashrc file is a bit overcrowded - remember it is just
+  17&nbsp;# just an example. Tailor it to your needs
+  18&nbsp;#
+  19&nbsp;#
+  20&nbsp;#===============================================================
+  21&nbsp;
+  22&nbsp;# --&#62; Comments added by HOWTO author.
+  23&nbsp;# --&#62; And then edited again by ER :-)
+  24&nbsp;
+  25&nbsp;#-----------------------------------
+  26&nbsp;# Source global definitions (if any)
+  27&nbsp;#-----------------------------------
+  28&nbsp;
+  29&nbsp;if [ -f /etc/bashrc ]; then
+  30&nbsp;        . /etc/bashrc   # --&#62; Read /etc/bashrc, if present.
+  31&nbsp;fi
+  32&nbsp;
+  33&nbsp;#-------------------------------------------------------------
+  34&nbsp;# Automatic setting of $DISPLAY (if not set already)
+  35&nbsp;# This works for linux - your mileage may vary.... 
+  36&nbsp;# The problem is that different types of terminals give
+  37&nbsp;# different answers to 'who am i'......
+  38&nbsp;# I have not found a 'universal' method yet
+  39&nbsp;#-------------------------------------------------------------
+  40&nbsp;
+  41&nbsp;function get_xserver ()
+  42&nbsp;{
+  43&nbsp;    case $TERM in
+  44&nbsp;	xterm )
+  45&nbsp;            XSERVER=$(who am i | awk '{print $NF}' | tr -d ')''(' ) 
+  46&nbsp;            # Ane-Pieter Wieringa suggests the following alternative:
+  47&nbsp;            # I_AM=$(who am i)
+  48&nbsp;            # SERVER=${I_AM#*(}
+  49&nbsp;            # SERVER=${SERVER%*)}
+  50&nbsp;
+  51&nbsp;            XSERVER=${XSERVER%%:*}
+  52&nbsp;	    ;;
+  53&nbsp;	aterm | rxvt)
+  54&nbsp; 	# find some code that works here.....
+  55&nbsp;	    ;;
+  56&nbsp;    esac  
+  57&nbsp;}
+  58&nbsp;
+  59&nbsp;if [ -z ${DISPLAY:=""} ]; then
+  60&nbsp;    get_xserver
+  61&nbsp;    if [[ -z ${XSERVER}  || ${XSERVER} == $(hostname) ||
+  62&nbsp;          ${XSERVER} == "unix" ]]; then
+  63&nbsp;	DISPLAY=":0.0"		# Display on local host
+  64&nbsp;    else		
+  65&nbsp;	DISPLAY=${XSERVER}:0.0	# Display on remote host
+  66&nbsp;    fi
+  67&nbsp;fi
+  68&nbsp;
+  69&nbsp;export DISPLAY
+  70&nbsp;
+  71&nbsp;#---------------
+  72&nbsp;# Some settings
+  73&nbsp;#---------------
+  74&nbsp;
+  75&nbsp;ulimit -S -c 0        # Don't want any coredumps
+  76&nbsp;set -o notify
+  77&nbsp;set -o noclobber
+  78&nbsp;set -o ignoreeof
+  79&nbsp;set -o nounset
+  80&nbsp;#set -o xtrace        # Useful for debuging
+  81&nbsp;
+  82&nbsp;# Enable options:
+  83&nbsp;shopt -s cdspell
+  84&nbsp;shopt -s cdable_vars
+  85&nbsp;shopt -s checkhash
+  86&nbsp;shopt -s checkwinsize
+  87&nbsp;shopt -s mailwarn
+  88&nbsp;shopt -s sourcepath
+  89&nbsp;shopt -s no_empty_cmd_completion  # bash&#62;=2.04 only
+  90&nbsp;shopt -s cmdhist
+  91&nbsp;shopt -s histappend histreedit histverify
+  92&nbsp;shopt -s extglob      # Necessary for programmable completion
+  93&nbsp;
+  94&nbsp;# Disable options:
+  95&nbsp;shopt -u mailwarn
+  96&nbsp;unset MAILCHECK       # I don't want my shell to warn me of incoming mail
+  97&nbsp;
+  98&nbsp;
+  99&nbsp;export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
+ 100&nbsp;export HISTIGNORE="&#38;:bg:fg:ll:h"
+ 101&nbsp;export HOSTFILE=$HOME/.hosts	# Put a list of remote hosts in ~/.hosts
+ 102&nbsp;
+ 103&nbsp;
+ 104&nbsp;
+ 105&nbsp;#-----------------------
+ 106&nbsp;# Greeting, motd etc...
+ 107&nbsp;#-----------------------
+ 108&nbsp;
+ 109&nbsp;# Define some colors first:
+ 110&nbsp;red='\e[0;31m'
+ 111&nbsp;RED='\e[1;31m'
+ 112&nbsp;blue='\e[0;34m'
+ 113&nbsp;BLUE='\e[1;34m'
+ 114&nbsp;cyan='\e[0;36m'
+ 115&nbsp;CYAN='\e[1;36m'
+ 116&nbsp;NC='\e[0m'              # No Color
+ 117&nbsp;# --&#62; Nice. Has the same effect as using "ansi.sys" in DOS.
+ 118&nbsp;
+ 119&nbsp;# Looks best on a black background.....
+ 120&nbsp;echo -e "${CYAN}This is BASH ${RED}${BASH_VERSION%.*}\
+ 121&nbsp;${CYAN} - DISPLAY on ${RED}$DISPLAY${NC}\n"
+ 122&nbsp;date
+ 123&nbsp;if [ -x /usr/games/fortune ]; then
+ 124&nbsp;    /usr/games/fortune -s     # makes our day a bit more fun.... :-)
+ 125&nbsp;fi
+ 126&nbsp;
+ 127&nbsp;function _exit()	# function to run upon exit of shell
+ 128&nbsp;{
+ 129&nbsp;    echo -e "${RED}Hasta la vista, baby${NC}"
+ 130&nbsp;}
+ 131&nbsp;trap _exit EXIT
+ 132&nbsp;
+ 133&nbsp;#---------------
+ 134&nbsp;# Shell Prompt
+ 135&nbsp;#---------------
+ 136&nbsp;
+ 137&nbsp;if [[ "${DISPLAY#$HOST}" != ":0.0" &#38;&#38;  "${DISPLAY}" != ":0" ]]; then  
+ 138&nbsp;    HILIT=${red}   # remote machine: prompt will be partly red
+ 139&nbsp;else
+ 140&nbsp;    HILIT=${cyan}  # local machine: prompt will be partly cyan
+ 141&nbsp;fi
+ 142&nbsp;
+ 143&nbsp;#  --&#62; Replace instances of \W with \w in prompt functions below
+ 144&nbsp;#+ --&#62; to get display of full path name.
+ 145&nbsp;
+ 146&nbsp;function fastprompt()
+ 147&nbsp;{
+ 148&nbsp;    unset PROMPT_COMMAND
+ 149&nbsp;    case $TERM in
+ 150&nbsp;        *term | rxvt )
+ 151&nbsp;           PS1="${HILIT}[\h]$NC \W &#62; \[\033]0;\${TERM} [\u@\h] \w\007\]" ;;
+ 152&nbsp;	linux )
+ 153&nbsp;           PS1="${HILIT}[\h]$NC \W &#62; " ;;
+ 154&nbsp;        *)
+ 155&nbsp;           PS1="[\h] \W &#62; " ;;
+ 156&nbsp;    esac
+ 157&nbsp;}
+ 158&nbsp;
+ 159&nbsp;function powerprompt()
+ 160&nbsp;{
+ 161&nbsp;    _powerprompt()
+ 162&nbsp;    {
+ 163&nbsp;        LOAD=$(uptime|sed -e "s/.*: \([^,]*\).*/\1/" -e "s/ //g")
+ 164&nbsp;    }
+ 165&nbsp;
+ 166&nbsp; PROMPT_COMMAND=_powerprompt
+ 167&nbsp; case $TERM in
+ 168&nbsp;   *term | rxvt  )
+ 169&nbsp;      PS1="${HILIT}[\A \$LOAD]$NC\n[\h \#] \W &#62; \
+ 170&nbsp;           \[\033]0;\${TERM} [\u@\h] \w\007\]" ;;
+ 171&nbsp;        linux )
+ 172&nbsp;           PS1="${HILIT}[\A - \$LOAD]$NC\n[\h \#] \w &#62; " ;;
+ 173&nbsp;        * )
+ 174&nbsp;           PS1="[\A - \$LOAD]\n[\h \#] \w &#62; " ;;
+ 175&nbsp; esac
+ 176&nbsp;}
+ 177&nbsp;
+ 178&nbsp;powerprompt     # This is the default prompt -- might be slow.
+ 179&nbsp;                # If too slow, use fastprompt instead.
+ 180&nbsp;
+ 181&nbsp;#===============================================================
+ 182&nbsp;#
+ 183&nbsp;# ALIASES AND FUNCTIONS
+ 184&nbsp;#
+ 185&nbsp;# Arguably, some functions defined here are quite big
+ 186&nbsp;# (ie 'lowercase') but my workstation has 512Meg of RAM, so ...
+ 187&nbsp;# If you want to make this file smaller, these functions can
+ 188&nbsp;# be converted into scripts.
+ 189&nbsp;#
+ 190&nbsp;# Many functions were taken (almost) straight from the bash-2.04
+ 191&nbsp;# examples.
+ 192&nbsp;#
+ 193&nbsp;#===============================================================
+ 194&nbsp;
+ 195&nbsp;#-------------------
+ 196&nbsp;# Personnal Aliases
+ 197&nbsp;#-------------------
+ 198&nbsp;
+ 199&nbsp;alias rm='rm -i'
+ 200&nbsp;alias cp='cp -i'
+ 201&nbsp;alias mv='mv -i'
+ 202&nbsp;# -&#62; Prevents accidentally clobbering files.
+ 203&nbsp;alias mkdir='mkdir -p'
+ 204&nbsp;
+ 205&nbsp;alias h='history'
+ 206&nbsp;alias j='jobs -l'
+ 207&nbsp;alias r='rlogin'
+ 208&nbsp;alias which='type -all'
+ 209&nbsp;alias ..='cd ..'
+ 210&nbsp;alias path='echo -e ${PATH//:/\\n}'
+ 211&nbsp;alias print='/usr/bin/lp -o nobanner -d $LPDEST'
+ 212&nbsp;      # Assumes LPDEST is defined
+ 213&nbsp;alias pjet='enscript -h -G -fCourier9 -d $LPDEST'
+ 214&nbsp;      # Pretty-print using enscript
+ 215&nbsp;alias background='xv -root -quit -max -rmode 5'
+ 216&nbsp;      # Put a picture in the background
+ 217&nbsp;alias du='du -kh'
+ 218&nbsp;alias df='df -kTh'
+ 219&nbsp;
+ 220&nbsp;# The 'ls' family (this assumes you use the GNU ls)
+ 221&nbsp;alias la='ls -Al'               # show hidden files
+ 222&nbsp;alias ls='ls -hF --color'	# add colors for filetype recognition
+ 223&nbsp;alias lx='ls -lXB'              # sort by extension
+ 224&nbsp;alias lk='ls -lSr'              # sort by size
+ 225&nbsp;alias lc='ls -lcr'		# sort by change time  
+ 226&nbsp;alias lu='ls -lur'		# sort by access time   
+ 227&nbsp;alias lr='ls -lR'               # recursive ls
+ 228&nbsp;alias lt='ls -ltr'              # sort by date
+ 229&nbsp;alias lm='ls -al |more'         # pipe through 'more'
+ 230&nbsp;alias tree='tree -Csu'		# nice alternative to 'ls'
+ 231&nbsp;
+ 232&nbsp;# tailoring 'less'
+ 233&nbsp;alias more='less'
+ 234&nbsp;export PAGER=less
+ 235&nbsp;export LESSCHARSET='latin1'
+ 236&nbsp;export LESSOPEN='|/usr/bin/lesspipe.sh %s 2&#62;&#38;-'
+ 237&nbsp;       # Use this if lesspipe.sh exists.
+ 238&nbsp;export LESS='-i -N -w  -z-4 -g -e -M -X -F -R -P%t?f%f \
+ 239&nbsp;:stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+ 240&nbsp;
+ 241&nbsp;# spelling typos - highly personnal :-)
+ 242&nbsp;alias xs='cd'
+ 243&nbsp;alias vf='cd'
+ 244&nbsp;alias moer='more'
+ 245&nbsp;alias moew='more'
+ 246&nbsp;alias kk='ll'
+ 247&nbsp;
+ 248&nbsp;#----------------
+ 249&nbsp;# a few fun ones
+ 250&nbsp;#----------------
+ 251&nbsp;
+ 252&nbsp;function xtitle ()
+ 253&nbsp;{
+ 254&nbsp;    case "$TERM" in
+ 255&nbsp;        *term | rxvt)
+ 256&nbsp;            echo -n -e "\033]0;$*\007" ;;
+ 257&nbsp;        *)  
+ 258&nbsp;	    ;;
+ 259&nbsp;    esac
+ 260&nbsp;}
+ 261&nbsp;
+ 262&nbsp;# aliases...
+ 263&nbsp;alias top='xtitle Processes on $HOST &#38;&#38; top'
+ 264&nbsp;alias make='xtitle Making $(basename $PWD) ; make'
+ 265&nbsp;alias ncftp="xtitle ncFTP ; ncftp"
+ 266&nbsp;
+ 267&nbsp;# .. and functions
+ 268&nbsp;function man ()
+ 269&nbsp;{
+ 270&nbsp;    for i ; do
+ 271&nbsp;	xtitle The $(basename $1|tr -d .[:digit:]) manual
+ 272&nbsp;	command man -F -a "$i"
+ 273&nbsp;    done
+ 274&nbsp;}
+ 275&nbsp;
+ 276&nbsp;function ll()
+ 277&nbsp;{ ls -l "$@"| egrep "^d" ; ls -lXB "$@" 2&#62;&#38;-| egrep -v "^d|total "; }
+ 278&nbsp;
+ 279&nbsp;function te()  # wrapper around xemacs/gnuserv
+ 280&nbsp;{
+ 281&nbsp;    if [ "$(gnuclient -batch -eval t 2&#62;&#38;-)" == "t" ]; then
+ 282&nbsp;        gnuclient -q "$@";
+ 283&nbsp;    else
+ 284&nbsp;        ( xemacs "$@" &#38;);
+ 285&nbsp;    fi
+ 286&nbsp;}
+ 287&nbsp;
+ 288&nbsp;#-----------------------------------
+ 289&nbsp;# File &#38; strings related functions:
+ 290&nbsp;#-----------------------------------
+ 291&nbsp;
+ 292&nbsp;# Find a file with a pattern in name:
+ 293&nbsp;function ff()
+ 294&nbsp;
+ 295&nbsp;{ find . -type f -iname '*'$*'*' -ls ; }
+ 296&nbsp;# Find a file with pattern $1 in name and Execute $2 on it:
+ 297&nbsp;
+ 298&nbsp;function fe()
+ 299&nbsp;{ find . -type f -iname '*'$1'*' -exec "${2:-file}" {} \;  ; }
+ 300&nbsp;# find pattern in a set of filesand highlight them:
+ 301&nbsp;
+ 302&nbsp;function fstr()
+ 303&nbsp;{
+ 304&nbsp;    OPTIND=1
+ 305&nbsp;    local case=""
+ 306&nbsp;    local usage="fstr: find string in files.
+ 307&nbsp;Usage: fstr [-i] \"pattern\" [\"filename pattern\"] "
+ 308&nbsp;    while getopts :it opt
+ 309&nbsp;    do
+ 310&nbsp;        case "$opt" in
+ 311&nbsp;        i) case="-i " ;;
+ 312&nbsp;        *) echo "$usage"; return;;
+ 313&nbsp;        esac
+ 314&nbsp;    done
+ 315&nbsp;    shift $(( $OPTIND - 1 ))
+ 316&nbsp;    if [ "$#" -lt 1 ]; then
+ 317&nbsp;        echo "$usage"
+ 318&nbsp;        return;
+ 319&nbsp;    fi
+ 320&nbsp;    local SMSO=$(tput smso)
+ 321&nbsp;    local RMSO=$(tput rmso)
+ 322&nbsp;    find . -type f -name "${2:-*}" -print0 |
+ 323&nbsp;    xargs -0 grep -sn ${case} "$1" 2&#62;&#38;- | \
+ 324&nbsp;    sed "s/$1/${SMSO}\0${RMSO}/gI" | more
+ 325&nbsp;}
+ 326&nbsp;
+ 327&nbsp;function cuttail() # Cut last n lines in file, 10 by default.
+ 328&nbsp;{
+ 329&nbsp;    nlines=${2:-10}
+ 330&nbsp;    sed -n -e :a -e "1,${nlines}!{P;N;D;};N;ba" $1
+ 331&nbsp;}
+ 332&nbsp;
+ 333&nbsp;function lowercase()  # move filenames to lowercase
+ 334&nbsp;{
+ 335&nbsp;    for file ; do
+ 336&nbsp;        filename=${file##*/}
+ 337&nbsp;        case "$filename" in
+ 338&nbsp;        */*) dirname==${file%/*} ;;
+ 339&nbsp;        *) dirname=.;;
+ 340&nbsp;        esac
+ 341&nbsp;        nf=$(echo $filename | tr A-Z a-z)
+ 342&nbsp;        newname="${dirname}/${nf}"
+ 343&nbsp;        if [ "$nf" != "$filename" ]; then
+ 344&nbsp;            mv "$file" "$newname"
+ 345&nbsp;            echo "lowercase: $file --&#62; $newname"
+ 346&nbsp;        else
+ 347&nbsp;            echo "lowercase: $file not changed."
+ 348&nbsp;        fi
+ 349&nbsp;    done
+ 350&nbsp;}
+ 351&nbsp;
+ 352&nbsp;function swap()         # swap 2 filenames around
+ 353&nbsp;{
+ 354&nbsp;    local TMPFILE=tmp.$$
+ 355&nbsp;    mv "$1" $TMPFILE
+ 356&nbsp;    mv "$2" "$1"
+ 357&nbsp;    mv $TMPFILE "$2"
+ 358&nbsp;}
+ 359&nbsp;
+ 360&nbsp;
+ 361&nbsp;#-----------------------------------
+ 362&nbsp;# Process/system related functions:
+ 363&nbsp;#-----------------------------------
+ 364&nbsp;
+ 365&nbsp;function my_ps()
+ 366&nbsp;{ ps $@ -u $USER -o pid,%cpu,%mem,bsdtime,command ; }
+ 367&nbsp;
+ 368&nbsp;function pp()
+ 369&nbsp;{ my_ps f | awk '!/awk/ &#38;&#38; $0~var' var=${1:-".*"} ; }
+ 370&nbsp;
+ 371&nbsp;# This function is roughly the same as 'killall' on linux
+ 372&nbsp;# but has no equivalent (that I know of) on Solaris
+ 373&nbsp;function killps()   # kill by process name
+ 374&nbsp;{
+ 375&nbsp;   local pid pname sig="-TERM"   # default signal
+ 376&nbsp;   if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+ 377&nbsp;       echo "Usage: killps [-SIGNAL] pattern"
+ 378&nbsp;       return;
+ 379&nbsp;   fi
+ 380&nbsp;   if [ $# = 2 ]; then sig=$1 ; fi
+ 381&nbsp;   for pid in $(my_ps| awk '!/awk/ &#38;&#38; $0~pat { print $1 }' pat=${!#} ) ; do
+ 382&nbsp;       pname=$(my_ps | awk '$1~var { print $5 }' var=$pid )
+ 383&nbsp;       if ask "Kill process $pid &#60;$pname&#62; with signal $sig?"
+ 384&nbsp;           then kill $sig $pid
+ 385&nbsp;       fi
+ 386&nbsp;   done
+ 387&nbsp;}
+ 388&nbsp;
+ 389&nbsp;function my_ip() # get IP adresses
+ 390&nbsp;{
+ 391&nbsp;    MY_IP=$(/sbin/ifconfig ppp0 | awk '/inet/ { print $2 } ' | \
+ 392&nbsp;sed -e s/addr://)
+ 393&nbsp;    MY_ISP=$(/sbin/ifconfig ppp0 | awk '/P-t-P/ { print $3 } ' | \
+ 394&nbsp;sed -e s/P-t-P://)
+ 395&nbsp;}
+ 396&nbsp;
+ 397&nbsp;function ii()   # get current host related info
+ 398&nbsp;{
+ 399&nbsp;  echo -e "\nYou are logged on ${RED}$HOST"
+ 400&nbsp;  echo -e "\nAdditionnal information:$NC " ; uname -a
+ 401&nbsp;  echo -e "\n${RED}Users logged on:$NC " ; w -h
+ 402&nbsp;  echo -e "\n${RED}Current date :$NC " ; date
+ 403&nbsp;  echo -e "\n${RED}Machine stats :$NC " ; uptime
+ 404&nbsp;  echo -e "\n${RED}Memory stats :$NC " ; free
+ 405&nbsp;  my_ip 2&#62;&#38;- ;
+ 406&nbsp;  echo -e "\n${RED}Local IP Address :$NC" ; echo ${MY_IP:-"Not connected"}
+ 407&nbsp;  echo -e "\n${RED}ISP Address :$NC" ; echo ${MY_ISP:-"Not connected"}
+ 408&nbsp;  echo
+ 409&nbsp;}
+ 410&nbsp;
+ 411&nbsp;# Misc utilities:
+ 412&nbsp;
+ 413&nbsp;function repeat()       # repeat n times command
+ 414&nbsp;{
+ 415&nbsp;    local i max
+ 416&nbsp;    max=$1; shift;
+ 417&nbsp;    for ((i=1; i &#60;= max ; i++)); do  # --&#62; C-like syntax
+ 418&nbsp;        eval "$@";
+ 419&nbsp;    done
+ 420&nbsp;}
+ 421&nbsp;
+ 422&nbsp;function ask()
+ 423&nbsp;{
+ 424&nbsp;    echo -n "$@" '[y/n] ' ; read ans
+ 425&nbsp;    case "$ans" in
+ 426&nbsp;        y*|Y*) return 0 ;;
+ 427&nbsp;        *) return 1 ;;
+ 428&nbsp;    esac
+ 429&nbsp;}
+ 430&nbsp;
+ 431&nbsp;#=======================================================================
+ 432&nbsp;#
+ 433&nbsp;# PROGRAMMABLE COMPLETION - ONLY SINCE BASH-2.04
+ 434&nbsp;# Most are taken from the bash 2.05 documentation and from Ian McDonalds
+ 435&nbsp;# 'Bash completion' package
+ 436&nbsp;#  (http://www.caliban.org/bash/index.shtml#completion)
+ 437&nbsp;# You will in fact need bash-2.05a for some features
+ 438&nbsp;#
+ 439&nbsp;#=======================================================================
+ 440&nbsp;
+ 441&nbsp;if [ "${BASH_VERSION%.*}" \&#60; "2.05" ]; then
+ 442&nbsp;   echo "You will need to upgrade to version 2.05 \
+ 443&nbsp;for programmable completion"
+ 444&nbsp;   return
+ 445&nbsp;fi
+ 446&nbsp;
+ 447&nbsp;shopt -s extglob        # necessary
+ 448&nbsp;set +o nounset          # otherwise some completions will fail
+ 449&nbsp;
+ 450&nbsp;complete -A hostname   rsh rcp telnet rlogin r ftp ping disk
+ 451&nbsp;complete -A export     printenv
+ 452&nbsp;complete -A variable   export local readonly unset
+ 453&nbsp;complete -A enabled    builtin
+ 454&nbsp;complete -A alias      alias unalias
+ 455&nbsp;complete -A function   function
+ 456&nbsp;complete -A user       su mail finger
+ 457&nbsp;
+ 458&nbsp;complete -A helptopic  help     # currently same as builtins
+ 459&nbsp;complete -A shopt      shopt
+ 460&nbsp;complete -A stopped -P '%' bg
+ 461&nbsp;complete -A job -P '%'     fg jobs disown
+ 462&nbsp;
+ 463&nbsp;complete -A directory  mkdir rmdir
+ 464&nbsp;complete -A directory   -o default cd
+ 465&nbsp;
+ 466&nbsp;# Compression
+ 467&nbsp;complete -f -o default -X '*.+(zip|ZIP)'  zip
+ 468&nbsp;complete -f -o default -X '!*.+(zip|ZIP)' unzip
+ 469&nbsp;complete -f -o default -X '*.+(z|Z)'      compress
+ 470&nbsp;complete -f -o default -X '!*.+(z|Z)'     uncompress
+ 471&nbsp;complete -f -o default -X '*.+(gz|GZ)'    gzip
+ 472&nbsp;complete -f -o default -X '!*.+(gz|GZ)'   gunzip
+ 473&nbsp;complete -f -o default -X '*.+(bz2|BZ2)'  bzip2
+ 474&nbsp;complete -f -o default -X '!*.+(bz2|BZ2)' bunzip2
+ 475&nbsp;# Postscript,pdf,dvi.....
+ 476&nbsp;complete -f -o default -X '!*.ps'  gs ghostview ps2pdf ps2ascii
+ 477&nbsp;complete -f -o default -X '!*.dvi' dvips dvipdf xdvi dviselect dvitype
+ 478&nbsp;complete -f -o default -X '!*.pdf' acroread pdf2ps
+ 479&nbsp;complete -f -o default -X '!*.+(pdf|ps)' gv
+ 480&nbsp;complete -f -o default -X '!*.texi*' makeinfo texi2dvi texi2html texi2pdf
+ 481&nbsp;complete -f -o default -X '!*.tex' tex latex slitex
+ 482&nbsp;complete -f -o default -X '!*.lyx' lyx
+ 483&nbsp;complete -f -o default -X '!*.+(htm*|HTM*)' lynx html2ps
+ 484&nbsp;# Multimedia
+ 485&nbsp;complete -f -o default -X '!*.+(jp*g|gif|xpm|png|bmp)' xv gimp
+ 486&nbsp;complete -f -o default -X '!*.+(mp3|MP3)' mpg123 mpg321
+ 487&nbsp;complete -f -o default -X '!*.+(ogg|OGG)' ogg123
+ 488&nbsp;
+ 489&nbsp;
+ 490&nbsp;
+ 491&nbsp;complete -f -o default -X '!*.pl'  perl perl5
+ 492&nbsp;
+ 493&nbsp;# This is a 'universal' completion function - it works when commands have
+ 494&nbsp;# a so-called 'long options' mode , ie: 'ls --all' instead of 'ls -a'
+ 495&nbsp;
+ 496&nbsp;_get_longopts () 
+ 497&nbsp;{ 
+ 498&nbsp;    $1 --help | sed  -e '/--/!d' -e 's/.*--\([^[:space:].,]*\).*/--\1/'| \
+ 499&nbsp;grep ^"$2" |sort -u ;
+ 500&nbsp;}
+ 501&nbsp;
+ 502&nbsp;_longopts_func ()
+ 503&nbsp;{
+ 504&nbsp;    case "${2:-*}" in
+ 505&nbsp;	-*)	;;
+ 506&nbsp;	*)	return ;;
+ 507&nbsp;    esac
+ 508&nbsp;
+ 509&nbsp;    case "$1" in
+ 510&nbsp;	\~*)	eval cmd="$1" ;;
+ 511&nbsp;	*)	cmd="$1" ;;
+ 512&nbsp;    esac
+ 513&nbsp;    COMPREPLY=( $(_get_longopts ${1} ${2} ) )
+ 514&nbsp;}
+ 515&nbsp;complete  -o default -F _longopts_func configure bash
+ 516&nbsp;complete  -o default -F _longopts_func wget id info a2ps ls recode
+ 517&nbsp;
+ 518&nbsp;
+ 519&nbsp;_make_targets ()
+ 520&nbsp;{
+ 521&nbsp;    local mdef makef gcmd cur prev i
+ 522&nbsp;
+ 523&nbsp;    COMPREPLY=()
+ 524&nbsp;    cur=${COMP_WORDS[COMP_CWORD]}
+ 525&nbsp;    prev=${COMP_WORDS[COMP_CWORD-1]}
+ 526&nbsp;
+ 527&nbsp;    # if prev argument is -f, return possible filename completions.
+ 528&nbsp;    # we could be a little smarter here and return matches against
+ 529&nbsp;    # `makefile Makefile *.mk', whatever exists
+ 530&nbsp;    case "$prev" in
+ 531&nbsp;        -*f)    COMPREPLY=( $(compgen -f $cur ) ); return 0;;
+ 532&nbsp;    esac
+ 533&nbsp;
+ 534&nbsp;    # if we want an option, return the possible posix options
+ 535&nbsp;    case "$cur" in
+ 536&nbsp;        -)      COMPREPLY=(-e -f -i -k -n -p -q -r -S -s -t); return 0;;
+ 537&nbsp;    esac
+ 538&nbsp;
+ 539&nbsp;    # make reads `makefile' before `Makefile'
+ 540&nbsp;    if [ -f makefile ]; then
+ 541&nbsp;        mdef=makefile
+ 542&nbsp;    elif [ -f Makefile ]; then
+ 543&nbsp;        mdef=Makefile
+ 544&nbsp;    else
+ 545&nbsp;        mdef=*.mk               # local convention
+ 546&nbsp;    fi
+ 547&nbsp;
+ 548&nbsp;    # before we scan for targets, see if a makefile name was specified
+ 549&nbsp;    # with -f
+ 550&nbsp;    for (( i=0; i &#60; ${#COMP_WORDS[@]}; i++ )); do
+ 551&nbsp;        if [[ ${COMP_WORDS[i]} == -*f ]]; then
+ 552&nbsp;            eval makef=${COMP_WORDS[i+1]}      # eval for tilde expansion
+ 553&nbsp;            break
+ 554&nbsp;        fi
+ 555&nbsp;    done
+ 556&nbsp;
+ 557&nbsp;        [ -z "$makef" ] &#38;&#38; makef=$mdef
+ 558&nbsp;
+ 559&nbsp;    # if we have a partial word to complete, restrict completions to
+ 560&nbsp;    # matches of that word
+ 561&nbsp;    if [ -n "$2" ]; then gcmd='grep "^$2"' ; else gcmd=cat ; fi
+ 562&nbsp;
+ 563&nbsp;    # if we don't want to use *.mk, we can take out the cat and use
+ 564&nbsp;    # test -f $makef and input redirection
+ 565&nbsp;    COMPREPLY=( $(cat $makef 2&#62;/dev/null | \
+ 566&nbsp;    awk 'BEGIN {FS=":"} /^[^.#   ][^=]*:/ {print $1}' \
+ 567&nbsp;    | tr -s ' ' '\012' | sort -u | eval $gcmd ) )
+ 568&nbsp;}
+ 569&nbsp;
+ 570&nbsp;complete -F _make_targets -X '+($*|*.[cho])' make gmake pmake
+ 571&nbsp;
+ 572&nbsp;
+ 573&nbsp;# cvs(1) completion
+ 574&nbsp;_cvs ()
+ 575&nbsp;{
+ 576&nbsp;    local cur prev
+ 577&nbsp;    COMPREPLY=()
+ 578&nbsp;    cur=${COMP_WORDS[COMP_CWORD]}
+ 579&nbsp;    prev=${COMP_WORDS[COMP_CWORD-1]}
+ 580&nbsp;
+ 581&nbsp;    if [ $COMP_CWORD -eq 1 ] || [ "${prev:0:1}" = "-" ]; then
+ 582&nbsp;        COMPREPLY=( $( compgen -W 'add admin checkout commit diff \
+ 583&nbsp;        export history import log rdiff release remove rtag status \
+ 584&nbsp;        tag update' $cur ))
+ 585&nbsp;    else
+ 586&nbsp;        COMPREPLY=( $( compgen -f $cur ))
+ 587&nbsp;    fi
+ 588&nbsp;    return 0
+ 589&nbsp;}
+ 590&nbsp;complete -F _cvs cvs
+ 591&nbsp;
+ 592&nbsp;_killall ()
+ 593&nbsp;{
+ 594&nbsp;    local cur prev
+ 595&nbsp;    COMPREPLY=()
+ 596&nbsp;    cur=${COMP_WORDS[COMP_CWORD]}
+ 597&nbsp;
+ 598&nbsp;    # get a list of processes (the first sed evaluation
+ 599&nbsp;    # takes care of swapped out processes, the second
+ 600&nbsp;    # takes care of getting the basename of the process)
+ 601&nbsp;    COMPREPLY=( $( /usr/bin/ps -u $USER -o comm  | \
+ 602&nbsp;        sed -e '1,1d' -e 's#[]\[]##g' -e 's#^.*/##'| \
+ 603&nbsp;        awk '{if ($0 ~ /^'$cur'/) print $0}' ))
+ 604&nbsp;
+ 605&nbsp;    return 0
+ 606&nbsp;}
+ 607&nbsp;
+ 608&nbsp;complete -F _killall killall killps
+ 609&nbsp;
+ 610&nbsp;
+ 611&nbsp;# A meta-command completion function for commands like sudo(8), which
+ 612&nbsp;# need to first complete on a command,
+ 613&nbsp;# then complete according to that command's own
+ 614&nbsp;# completion definition - currently not quite foolproof
+ 615&nbsp;# (e.g. mount and umount don't work properly),
+ 616&nbsp;# but still quite useful --
+ 617&nbsp;# By Ian McDonald, modified by me.
+ 618&nbsp;
+ 619&nbsp;_my_command()
+ 620&nbsp;{
+ 621&nbsp;    local cur func cline cspec
+ 622&nbsp;    
+ 623&nbsp;    COMPREPLY=()
+ 624&nbsp;    cur=${COMP_WORDS[COMP_CWORD]}
+ 625&nbsp;
+ 626&nbsp;    if [ $COMP_CWORD = 1 ]; then
+ 627&nbsp;	COMPREPLY=( $( compgen -c $cur ) )
+ 628&nbsp;    elif complete -p ${COMP_WORDS[1]} &#38;&#62;/dev/null; then
+ 629&nbsp;	cspec=$( complete -p ${COMP_WORDS[1]} )
+ 630&nbsp;	if [ "${cspec%%-F *}" != "${cspec}" ]; then
+ 631&nbsp;	    # complete -F &#60;function&#62;
+ 632&nbsp;	    #
+ 633&nbsp;	    # COMP_CWORD and COMP_WORDS() are not read-only,
+ 634&nbsp;	    # so we can set them before handing off to regular
+ 635&nbsp;	    # completion routine
+ 636&nbsp;	
+ 637&nbsp;	    # set current token number to 1 less than now
+ 638&nbsp;	    COMP_CWORD=$(( $COMP_CWORD - 1 ))
+ 639&nbsp;	    # get function name
+ 640&nbsp;	    func=${cspec#*-F }
+ 641&nbsp;	    func=${func%% *}
+ 642&nbsp;	    # get current command line minus initial command
+ 643&nbsp;	    cline="${COMP_LINE#$1 }"
+ 644&nbsp;	    # split current command line tokens into array
+ 645&nbsp;		COMP_WORDS=( $cline )
+ 646&nbsp;	    $func $cline
+ 647&nbsp;	elif [ "${cspec#*-[abcdefgjkvu]}" != "" ]; then
+ 648&nbsp;          # complete -[abcdefgjkvu]
+ 649&nbsp;          #func=$( echo $cspec | sed -e 's/^.*\(-[abcdefgjkvu]\).*$/\1/' )
+ 650&nbsp;          func=$( echo $cspec | sed -e 's/^complete//' -e 's/[^ ]*$//' )
+ 651&nbsp;	    COMPREPLY=( $( eval compgen $func $cur ) )
+ 652&nbsp;	elif [ "${cspec#*-A}" != "$cspec" ]; then
+ 653&nbsp;	    # complete -A &#60;type&#62;
+ 654&nbsp;	    func=${cspec#*-A }
+ 655&nbsp;	func=${func%% *}
+ 656&nbsp;	COMPREPLY=( $( compgen -A $func $cur ) )
+ 657&nbsp;	fi
+ 658&nbsp;    else
+ 659&nbsp;	COMPREPLY=( $( compgen -f $cur ) )
+ 660&nbsp;    fi
+ 661&nbsp;}
+ 662&nbsp;
+ 663&nbsp;
+ 664&nbsp;complete -o default -F _my_command nohup exec eval \
+ 665&nbsp;trace truss strace sotruss gdb
+ 666&nbsp;complete -o default -F _my_command command type which man nice
+ 667&nbsp;
+ 668&nbsp;# Local Variables:
+ 669&nbsp;# mode:shell-script
+ 670&nbsp;# sh-shell:bash
+ 671&nbsp;# End:</PRE
+></TD
+></TR
+></TABLE
+><HR></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="histcommands.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dosbatch.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>History Commands</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Converting DOS Batch Files to Shell Scripts</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
